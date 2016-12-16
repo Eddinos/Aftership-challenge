@@ -6,7 +6,8 @@
   "scripts": {
     "test": "test",
     "build": "webpack -w",
-    "start": "webpack-dev-server --progress --hot --inline --port 7777"
+    "serve": "webpack-dev-server --progress --hot --inline --port 7777",
+    "start": "npm run build && node server.js"
   },
   "repository": {
     "type": "git",
