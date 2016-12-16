@@ -5,8 +5,8 @@ const webpack = require('webpack');
 module.exports = {
   entry: "./app/components/index.js",
   output: {
-    filename: "./public/bundle.js",
-    path: path.join('/'),
+    filename: "./bundle.js",
+    path: path.join(__dirname, '/public'),
     publicPath: '/'
   },
   module: {
@@ -20,19 +20,17 @@ module.exports = {
         }
       },
       {
-        test    : /(\.scss|\.css)$/,
-        include : /(node_modules)\/react-toolbox/,
-        loaders : [
-          require.resolve('style-loader'),
-          require.resolve('css-loader') + '?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-          require.resolve('sass-loader') + '?sourceMap'
-        ]
+        test: /\.s?css$/,
+        loaders: ['style', 'css', 'sass']
       }
     ]
   },
   devServer: {
     contentBase: './public',
     hot: true
+  },
+  resolve: {
+    extensions: ['', '.js', 'css', 'scss']
   },
   plugins: [
     new ExtractTextPlugin('bundle.css', { allChunks: true }),
@@ -47,6 +45,7 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ]
 }

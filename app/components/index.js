@@ -1,15 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import { Component } from 'react';
+import App from './App/App';
 
-class Main extends Component {
-  render() {
-    return(
-      <div>
-        Yo people
-      </div>
-    )
-  }
-}
-
-ReactDOM.render(<Main/>, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));

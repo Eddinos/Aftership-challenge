@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "build": "webpack -w",
-    "serve": "webpack-dev-server --progress --hot --inline --port 7777",
+    "build": "webpack",
+    "serve": "webpack-dev-server --progress --hot --inline --port 9999",
     "start": "npm run build && node server.js"
   },
   "repository": {
@@ -27,6 +27,7 @@
     "css-loader": "^0.26.1",
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^4.0.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "sass-loader": "^4.1.0",
