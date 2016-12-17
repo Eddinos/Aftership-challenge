@@ -1,0 +1,14 @@
+.base-selector {
+  border-style: outset;
+  display: flex;
+  padding: 3em;
+  font-family: "Century Gothic";
+  align-items: center;
+  margin: 10px 0 10px 0;
+  .currency-selection {
+    margin-left: 1%;
+    font-family: inherit;
+    font-size: 110%;
+    padding: 10px;
+  }
+}
