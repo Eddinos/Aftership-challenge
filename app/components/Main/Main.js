@@ -4,18 +4,19 @@ import BaseSelector from '../BaseSelector/BaseSelector';
 import Rates from '../Rates/Rates';
 import axios from 'axios';
 import config from '../../../config';
+import Modal from 'react-modal';
 
-const rates = {
-  "AED": 3.67246,
-  "ALL": 144.529793,
-  "ANG": 1.79,
-  "AAA": 3.67246,
-  "AAB": 144.529793,
-  "AAC": 1.79,
-  "AAD": 3.67246,
-  "AAE": 144.529793,
-  "AAF": 1.79
-}
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    fontFamily            : 'Century Gothic'
+  }
+};
 
 export default class Main extends Component {
   constructor (props) {
@@ -23,11 +24,59 @@ export default class Main extends Component {
     this.state = {
       baseCurrency: 'USD',
       currencies: {},
-      rates: {}
+      rates: {},
+      modalIsOpen: false,
+      errorMessage: '',
+      historicalDate: ''
     }
+
+  }
+
+  openModal () {
+    this.setState({modalIsOpen: true})
+  }
+
+  closeModal () {
+    this.setState({modalIsOpen: false})
   }
 
   componentWillMount () {
+    console.log('Main did mount');
+    this.getCurrencies();
+
+    this.getRates();
+  }
+
+  handleSelection (e) {
+    this.setState({
+      baseCurrency: e.target.value
+    }, () => {
+      console.log(`Ceci est un message du Main: ${this.state.baseCurrency} a été sélectionné`);
+      this.getRates()
+    });
+
+  }
+
+  getRates (date, latest=true) {
+    // If latest is true we make a call for latest rates, else we set up a date
+    let promise = latest ? axios.get(`${config.latestRatesAPI}?base=${this.state.baseCurrency}`) : axios.get(`${config.ratesAPI}/${date}?base=${this.state.baseCurrency}`);
+
+    promise.then((response) => {
+      this.setState({rates: response.data.rates})
+    })
+    .catch((error) => {
+      if(error.response.status === 422) {
+        this.setState({errorMessage: `${error.response.data.error}: Unfortunately, exchange rates are not available yet for this currency`})
+        this.openModal();
+      }
+      else {
+        this.setState({errorMessage: `error ${error.response.status}: ${error.response.data.error}`});
+        this.openModal();
+      }
+    })
+  }
+
+  getCurrencies () {
     axios.get(config.currenciesAPI)
     .then((response) => {
       this.setState({currencies: response.data})
@@ -35,37 +84,32 @@ export default class Main extends Component {
     .catch(function (error) {
       console.log(error);
     });
+  }
 
-    axios.get(`${config.latestAPI}?app_id=${config.appId}`)
-    .then((response) => {
-      this.setState({rates: response.data.rates})
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+  getHistoricalRates () {
+    axios
   }
 
   render () {
     return (
       <div className="main">
         I Am The Main Component. {this.state.baseCurrency != '' ? `Your base currency is ${this.state.baseCurrency}` : `Before all, you neede to select a base` }
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.closeModal.bind(this)}
+          style={customStyles}
+        >
+          { this.state.errorMessage }
+        </Modal>
         <BaseSelector
           currencies={ this.state.currencies }
           onSelection={ this.handleSelection.bind(this) }
         />
         <Rates
           rates={ this.state.rates }
+          onChangeDate={ this.getRates.bind(this) }
         />
       </div>
     )
   }
-
-  handleSelection (e) {
-    console.log(`Ceci est un message du Main: ${e.target.value} a été sélectionné`);
-    this.setState({
-      baseCurrency: e.target.value
-    })
-  }
-
-
 }

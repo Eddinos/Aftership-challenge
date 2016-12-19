@@ -1,4 +1,14 @@
 .footer {
-  background-color: yellowgreen;
+  background-color: #3c3e4f;
   height: 1.5em;
+  margin-top: auto;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  a {
+    color: white;
+    font-family: 'Century Gothic';
+    text-decoration: none;
+  }
 }

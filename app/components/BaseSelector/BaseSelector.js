@@ -14,7 +14,7 @@ export default class BaseSelector extends Component {
     let items = [];
     for (var key in currencies) {
       if (currencies.hasOwnProperty(key)) {
-        items.push(<option value={ [key] } label={ currencies[key] } selected={key=='USD'}></option>)
+        items.push(<option value={ [key] } label={ `${currencies[key]} (${key})` } selected={key=='USD'}>{ `${currencies[key]} (${key})` }</option>)
       }
     }
     return items;
