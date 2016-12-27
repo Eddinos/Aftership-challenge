@@ -5,6 +5,7 @@ import Rates from '../Rates/Rates';
 import axios from 'axios';
 import config from '../../../config';
 import Modal from 'react-modal';
+import Converter from '../Converter/Converter';
 
 const customStyles = {
   content : {
@@ -41,7 +42,7 @@ export default class Main extends Component {
   }
 
   componentWillMount () {
-    console.log('Main did mount');
+    console.log('Main will mount');
     this.getCurrencies();
 
     this.getRates();
@@ -86,10 +87,6 @@ export default class Main extends Component {
     });
   }
 
-  getHistoricalRates () {
-    axios
-  }
-
   render () {
     return (
       <div className="main">
@@ -105,10 +102,16 @@ export default class Main extends Component {
           currencies={ this.state.currencies }
           onSelection={ this.handleSelection.bind(this) }
         />
-        <Rates
-          rates={ this.state.rates }
-          onChangeDate={ this.getRates.bind(this) }
-        />
+        <div className="conversion">
+          <Rates
+            rates={ this.state.rates }
+            onChangeDate={ this.getRates.bind(this) }
+          />
+          <Converter
+            rates={ this.state.rates }
+            base={ this.state.baseCurrency }
+          />
+        </div>
       </div>
     )
   }
